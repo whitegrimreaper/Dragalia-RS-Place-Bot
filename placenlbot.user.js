@@ -17,12 +17,11 @@
 
 // Sorry voor de rommelige code, haast en clean gaatn iet altijd samen ;)
 
-var socket;
-var hasOrders = false;
 var accessToken;
 var currentOrderCanvas = document.createElement('canvas');
 var currentOrderCtx = currentOrderCanvas.getContext('2d');
 var currentPlaceCanvas = document.createElement('canvas');
+var currentMapUrl;
 
 const COLOR_MAPPINGS = {
     '#BE0039': 1,
@@ -78,76 +77,30 @@ order.sort(() => Math.random() - 0.5);
         duration: 10000
     }).showToast();
 
-    connectSocket();
     attemptPlace();
-
-    setInterval(() => {
-        if (socket) socket.send(JSON.stringify({ type: 'ping' }));
-    }, 5000);
 })();
 
-function connectSocket() {
-    Toastify({
-        text: 'Connecting to PlaceNL...',
-        duration: 10000
-    }).showToast();
-
-    socket = new WebSocket('wss://placenl.noahvdaa.me/api/ws');
-
-    socket.onopen = function () {
-        Toastify({
-            text: 'Connected to PlaceNL server!',
-            duration: 10000
-        }).showToast();
-        socket.send(JSON.stringify({ type: 'getmap' }));
-    };
-
-    socket.onmessage = async function (message) {
-        var data;
-        try {
-            data = JSON.parse(message.data);
-        } catch (e) {
-            return;
-        }
-
-        switch (data.type.toLowerCase()) {
-            case 'map':
-                Toastify({
-                    text: `New map loaded (reason: ${data.reason ? data.reason : 'connected to server!'})`,
-                    duration: 10000
-                }).showToast();
-                currentOrderCtx = await getCanvasFromUrl(`https://placenl.noahvdaa.me/maps/${data.data}`, currentOrderCanvas);
-                hasOrders = true;
-                break;
-            default:
-                break;
-        }
-    };
-
-    socket.onclose = function (e) {
-        Toastify({
-            text: `PlaceNL server has disconnected: ${e.reason}`,
-            duration: 10000
-        }).showToast();
-        console.error('Socket: ', e.reason);
-        socket.close();
-        setTimeout(connectSocket, 1000);
-    };
+async function updateMap() {
+    const response = await fetch('https://endendragon.github.io/Dragalia-Place-Bot/current.txt?t=' + Date.now());
+    const filename = await response.text();
+    const mapUrl = 'https://endendragon.github.io/Dragalia-Place-Bot/maps/' + filename + '.png';
+    if (currentMapUrl != mapUrl) {
+        currentMapUrl = mapUrl;
+        currentOrderCtx = await getCanvasFromUrl(currentMapUrl, currentOrderCanvas);
+    }
 }
 
 async function attemptPlace() {
-    if (!hasOrders) {
-        setTimeout(attemptPlace, 2000); // probeer opnieuw in 2sec.
-        return;
-    }
+    await updateMap();
+
     var ctx;
     try {
         ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), currentPlaceCanvas, 0, 0);
         ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), currentPlaceCanvas, 1000, 0)
     } catch (e) {
-        console.warn('Fout bij ophalen map: ', e);
+        console.warn('Error retrieving place: ', e);
         Toastify({
-            text: 'Error retrieving folder. Trying again in 10 sec...',
+            text: 'Error retrieving place. Trying again in 10 sec...',
             duration: 10000
         }).showToast();
         setTimeout(attemptPlace, 10000); // probeer opnieuw in 10sec.
@@ -218,7 +171,6 @@ async function attemptPlace() {
 }
 
 function place(x, y, color) {
-    socket.send(JSON.stringify({ type: 'placepixel', x, y, color }));
     return fetch('https://gql-realtime-2.reddit.com/query', {
         method: 'POST',
         body: JSON.stringify({
