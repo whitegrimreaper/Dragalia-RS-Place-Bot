@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dragalia Place Bot
 // @namespace    https://github.com/EndenDragon/Dragalia-Place-Bot
-// @version      12
+// @version      13
 // @description  Dragalia Place Bot
 // @author       EndenDragon
 // @match        https://www.reddit.com/r/place/*
