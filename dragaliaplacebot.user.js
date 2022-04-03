@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dragalia Place Bot
 // @namespace    https://github.com/EndenDragon/Dragalia-Place-Bot
-// @version      13
+// @version      14
 // @description  Dragalia Place Bot
 // @author       EndenDragon
 // @match        https://www.reddit.com/r/place/*
@@ -134,7 +134,10 @@ async function attemptPlace() {
             const res = await place(x, y, COLOR_MAPPINGS[hex]);
             const data = await res.json();
             try {
-                if (data.errors) {
+                if (data.error && data.error.reason == "UNAUTHORIZED") {
+                    accessToken = await getAccessToken();
+                    setTimeout(attemptPlace, 1000);
+                } else if (data.errors) {
                     const error = data.errors[0];
                     const nextPixel = error.extensions.nextAvailablePixelTs + 3000;
                     const nextPixelDate = new Date(nextPixel);
