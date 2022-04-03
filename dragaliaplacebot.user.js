@@ -89,7 +89,7 @@ async function updateMap() {
         currentOrderCtx = await getCanvasFromUrl(currentMapUrl, currentOrderCanvas);
         Toastify({
             text: `Just updated the map to version ${filename}.`,
-            duration: delay
+            duration: 10000
         }).showToast();
     }
 }
