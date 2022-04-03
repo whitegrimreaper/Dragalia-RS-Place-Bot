@@ -1,6 +1,6 @@
-# Dragalia Place Bot
+# Dragalia & RS Place Bot
 
-Autogalia bot that automates r/place for Dragalia & Alliances. Coordinate within the [Dragalia Discord](https://discord.gg/dragalialost).
+Bot that automates r/place for the Northern Alliance (Runescape, Dragalia, Eve, and others). Coordinate within the [Northern Alliance Discord](https://discord.gg/AaKgEYQp).
 For access to updating the maps, please propose pull requests. I will get back to you as soon as possible. You can contact me via Discord, EndenDragon#1337.
 
 ## User script bot
