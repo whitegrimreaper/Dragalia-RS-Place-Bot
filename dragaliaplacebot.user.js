@@ -81,9 +81,9 @@ order.sort(() => Math.random() - 0.5);
 })();
 
 async function updateMap() {
-    const response = await fetch('https://whitegrimreaper.github.io/Dragalia-RS-Place-Bot/current.txt?t=' + Date.now());
+    const response = await fetch('https://raw.githubusercontent.com/whitegrimreaper/Dragalia-RS-Place-Bot/master/current.txt?t=' + Date.now());
     const filename = await response.text();
-    const mapUrl = 'https://whitegrimreaper.github.io/Dragalia=RS-Place-Bot/maps/' + filename + '.png';
+    const mapUrl = 'https://raw.githubusercontent.com/whitegrimreaper/Dragalia-RS-Place-Bot/master/maps/' + filename + '.png';
     if (currentMapUrl != mapUrl) {
         currentMapUrl = mapUrl;
         currentOrderCtx = await getCanvasFromUrl(currentMapUrl, currentOrderCanvas);
