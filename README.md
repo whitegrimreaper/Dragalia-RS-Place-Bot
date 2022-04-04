@@ -10,7 +10,7 @@ For access to updating the maps, please propose pull requests. I will get back t
 Before you start, make sure your pixel cooldown has expired.
 
 1. Install the [Tampermonkey](https://www.tampermonkey.net/) browser extension..
-2. Download link: [https://github.com/whitegrimreaper/Dragalia-RS-Place-Bot/raw/master/dragaliaplacebot.user.js](https://github.com/whitegrimreaper/Dragalia-RS-0Place-Bot/raw/master/dragaliaplacebot.user.js). If all goes well, Tampermonkey should offer you to install a userscript. Click on **Install**.
+2. Download link: [https://github.com/whitegrimreaper/Dragalia-RS-Place-Bot/raw/master/dragaliaplacebot.user.js](https://github.com/whitegrimreaper/Dragalia-RS-Place-Bot/raw/master/dragaliaplacebot.user.js). If all goes well, Tampermonkey should offer you to install a userscript. Click on **Install**.
 3. Reload your **r/place** tab. If everything went well, you'll see "Get access token..." at the top right of your screen. The bot is now active, and will keep you informed of what it is doing via these notifications at the top right of your screen.
 
 ### Disadvantages of this bot
