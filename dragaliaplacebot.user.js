@@ -140,7 +140,7 @@ async function attemptPlace() {
                     setTimeout(attemptPlace, 1000);
                 } else if (data.errors) {
                     const error = data.errors[0];
-                    const nextPixel = error.extensions.nextAvailablePixelTs + 3000;
+                    const nextPixel = error.extensions.nextAvailablePixelTs + (3000 + Math.floor(Math.random() * 500));
                     const nextPixelDate = new Date(nextPixel);
                     const delay = nextPixelDate.getTime() - Date.now();
                     Toastify({
