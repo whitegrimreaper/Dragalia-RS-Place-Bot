@@ -81,9 +81,9 @@ order.sort(() => Math.random() - 0.5);
 })();
 
 async function updateMap() {
-    const response = await fetch('https://endendragon.github.io/Dragalia-Place-Bot/current.txt?t=' + Date.now());
+    const response = await fetch('https://whitegrimreaper.github.io/Dragalia-RS-Place-Bot/current.txt?t=' + Date.now());
     const filename = await response.text();
-    const mapUrl = 'https://endendragon.github.io/Dragalia-Place-Bot/maps/' + filename + '.png';
+    const mapUrl = 'https://whitegrimreaper.github.io/Dragalia=RS-Place-Bot/maps/' + filename + '.png';
     if (currentMapUrl != mapUrl) {
         currentMapUrl = mapUrl;
         currentOrderCtx = await getCanvasFromUrl(currentMapUrl, currentOrderCanvas);
@@ -107,7 +107,7 @@ async function attemptPlace() {
             text: 'Error retrieving place. Trying again in 10 sec...',
             duration: 10000
         }).showToast();
-        setTimeout(attemptPlace, 10000); // probeer opnieuw in 10sec.
+        setTimeout(attemptPlace, 10000); // Retry in 10sec.
         return;
     }
 
