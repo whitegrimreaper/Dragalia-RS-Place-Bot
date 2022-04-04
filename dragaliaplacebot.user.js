@@ -1,18 +1,19 @@
 // ==UserScript==
 // @name         Dragalia Place Bot
-// @namespace    https://github.com/EndenDragon/Dragalia-Place-Bot
+// @namespace    https://github.com/whitegrimreaper/Dragalia-RS-Place-Bot
 // @version      14
 // @description  Dragalia Place Bot
-// @author       EndenDragon
+// @author       whitegrimreaper
 // @match        https://www.reddit.com/r/place/*
 // @match        https://new.reddit.com/r/place/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @require	     https://cdn.jsdelivr.net/npm/toastify-js
 // @resource     TOASTIFY_CSS https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css
-// @updateURL    https://github.com/EndenDragon/Dragalia-Place-Bot/raw/master/dragaliaplacebot.user.js
-// @downloadURL  https://github.com/EndenDragon/Dragalia-Place-Bot/raw/master/dragaliaplacebot.user.js
+// @updateURL    https://github.com/whitegrimreaperDragalia-RS-Place-Bot/raw/master/dragaliaplacebot.user.js
+// @downloadURL  https://github.com/whitegrimreaper/Dragalia-RS-Place-Bot/raw/master/dragaliaplacebot.user.js
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
+// @grant        GM.xmlHttpRequest
 // ==/UserScript==
 
 // Sorry voor de rommelige code, haast en clean gaatn iet altijd samen ;)
@@ -59,11 +60,11 @@ order.sort(() => Math.random() - 0.5);
 (async function () {
     GM_addStyle(GM_getResourceText('TOASTIFY_CSS'));
     currentOrderCanvas.width = 2000;
-    currentOrderCanvas.height = 1000;
+    currentOrderCanvas.height = 2000;
     currentOrderCanvas.style.display = 'none';
     currentOrderCanvas = document.body.appendChild(currentOrderCanvas);
     currentPlaceCanvas.width = 2000;
-    currentPlaceCanvas.height = 1000;
+    currentPlaceCanvas.height = 2000;
     currentPlaceCanvas.style.display = 'none';
     currentPlaceCanvas = document.body.appendChild(currentPlaceCanvas);
 
@@ -263,17 +264,36 @@ async function getCurrentImageUrl(id = '0') {
     });
 }
 
-function getCanvasFromUrl(url, canvas, x = 0, y = 0) {
+function getCanvasFromUrl(url, canvas, x = 0, y = 0, clearCanvas = false) {
     return new Promise((resolve, reject) => {
-        var ctx = canvas.getContext('2d');
-        var img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            ctx.drawImage(img, x, y);
-            resolve(ctx);
+        let loadImage = ctx => {
+        GM.xmlHttpRequest({
+            method: "GET",
+            url: url,
+            responseType: 'blob',
+            onload: function(response) {
+            var urlCreator = window.URL || window.webkitURL;
+            var imageUrl = urlCreator.createObjectURL(this.response);
+            var img = new Image();
+            img.onload = () => {
+                if (clearCanvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                ctx.drawImage(img, x, y);
+                resolve(ctx);
+            };
+            img.onerror = () => {
+                Toastify({
+                    text: 'Fout bij ophalen map. Opnieuw proberen in 3 sec...',
+                    duration: 3000
+                }).showToast();
+                setTimeout(() => loadImage(ctx), 3000);
+            };
+            img.src = imageUrl;
+  }
+})
         };
-        img.onerror = reject;
-        img.src = url;
+        loadImage(canvas.getContext('2d'));
     });
 }
 
