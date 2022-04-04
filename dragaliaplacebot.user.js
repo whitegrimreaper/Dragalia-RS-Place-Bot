@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dragalia Place Bot
 // @namespace    https://github.com/whitegrimreaper/Dragalia-RS-Place-Bot
-// @version      14
+// @version      15
 // @description  Dragalia Place Bot
 // @author       whitegrimreaper
 // @match        https://www.reddit.com/r/place/*
@@ -14,6 +14,7 @@
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM.xmlHttpRequest
+// @connect      https://reddit.com
 // ==/UserScript==
 
 // Sorry voor de rommelige code, haast en clean gaatn iet altijd samen ;)
@@ -140,7 +141,7 @@ async function attemptPlace() {
                     setTimeout(attemptPlace, 1000);
                 } else if (data.errors) {
                     const error = data.errors[0];
-                    const nextPixel = error.extensions.nextAvailablePixelTs + (3000 + Math.floor(Math.random() * 500));
+                    const nextPixel = error.extensions.nextAvailablePixelTs + (3100 + Math.floor(Math.random() * 500));
                     const nextPixelDate = new Date(nextPixel);
                     const delay = nextPixelDate.getTime() - Date.now();
                     Toastify({
